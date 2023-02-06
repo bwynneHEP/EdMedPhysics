@@ -31,7 +31,8 @@
 /vis/drawVolume
 #
 # Specify view angle:
-/vis/viewer/set/viewpointThetaPhi 90. 180.
+#/vis/viewer/set/viewpointThetaPhi 90. 180.
+/vis/viewer/set/viewpointThetaPhi 120 150 # perspective
 #
 # Specify zoom value:
 #/vis/viewer/zoom 2.
@@ -40,6 +41,12 @@
 #/vis/viewer/set/style wireframe
 #/vis/viewer/set/auxiliaryEdge true
 #/vis/viewer/set/lineSegmentsPerCircle 100
+/vis/viewer/set/style surface
+/vis/geometry/set/colour AbsoLV 0 0 0 1 0.3 # Blue, 30% opaque
+/vis/geometry/set/visibility World 0 false
+/vis/geometry/set/visibility GapLV 0 false
+/vis/geometry/set/visibility Layer 0 false
+/vis/geometry/set/visibility Calorimeter 0 false
 #
 # Draw coordinate axes:
 #/vis/scene/add/axes 0 0 0 1 m
