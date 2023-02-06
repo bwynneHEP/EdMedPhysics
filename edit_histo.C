@@ -57,7 +57,7 @@ void edit_histo(double x_max = -1.){
   // Stay in the while loop until a valid answer is given.
   // (NB there is an option to skip this by setting the value as an 
   // input argument to this function - see function declaration at top)
-  while(x_max < 0 && x_max <= 60.){
+  while(x_max < 0 || x_max > 500.){
     
     // Print a question to the user. IE to yourself.
     std::cout << std::endl;
