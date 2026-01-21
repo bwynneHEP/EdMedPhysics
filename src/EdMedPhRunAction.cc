@@ -88,10 +88,29 @@ void EdMedPhRunAction::BeginOfRunAction(const G4Run* /*run*/)
   // Get analysis manager
   auto analysisManager = G4RootAnalysisManager::Instance();
 
-  // Open an output file
-  //
-  G4String fileName = "EdMedPhysics";
-  analysisManager->OpenFile(fileName);
+  // Find a unique filename
+  G4String fileName = "";
+  G4int fileIndex = 1;
+  while( fileIndex < 1000 ) // Just to stop it looping forever if something weird happens
+  {
+    fileName = "EdMedPhysics" + std::to_string(fileIndex);
+
+    // If the current file name + index can be opened, it exists
+    if ( FILE *file = fopen( (fileName + ".root").c_str(), "r") )
+    {
+      // Close it and try the next
+      fclose( file );
+      fileIndex++;
+    }
+    else
+    {
+      // File name not currently in use
+      break;
+    }
+  }
+
+  // Open output file
+  analysisManager->OpenFile( fileName );
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
