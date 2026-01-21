@@ -32,6 +32,7 @@
 #define EdMedPhRunAction_h 1
 
 #include "G4UserRunAction.hh"
+#include "G4String.hh"
 #include "globals.hh"
 
 class G4Run;
@@ -57,11 +58,14 @@ class G4Run;
 class EdMedPhRunAction : public G4UserRunAction
 {
   public:
-    EdMedPhRunAction();
+    EdMedPhRunAction(G4String FileNameSuffix = "");
     virtual ~EdMedPhRunAction() = default;
 
     virtual void BeginOfRunAction(const G4Run*);
     virtual void   EndOfRunAction(const G4Run*);
+
+  private:
+    G4String m_fileNameSuffix;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

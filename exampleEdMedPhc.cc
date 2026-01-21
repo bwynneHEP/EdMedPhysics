@@ -118,8 +118,9 @@ int main(int argc,char** argv)
     auto physicsList = new QGSP_BERT_HP;
 
   runManager->SetUserInitialization(physicsList);
-    
-  auto actionInitialization = new EdMedPhcActionInitialization();
+
+  G4String macroName = macro.substr( 0, macro.find(".mac") ); // remove the file extension
+  auto actionInitialization = new EdMedPhcActionInitialization(macroName);
   runManager->SetUserInitialization(actionInitialization);
   
   // Initialize visualization

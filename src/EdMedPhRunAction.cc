@@ -39,8 +39,9 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EdMedPhRunAction::EdMedPhRunAction()
+EdMedPhRunAction::EdMedPhRunAction(G4String FileNameSuffix)
  : G4UserRunAction()
+ , m_fileNameSuffix(FileNameSuffix)
 { 
   // set printing event number per each event
   G4RunManager::GetRunManager()->SetPrintProgress(1);     
@@ -93,10 +94,13 @@ void EdMedPhRunAction::BeginOfRunAction(const G4Run* /*run*/)
   G4int fileIndex = 1;
   while( fileIndex < 1000 ) // Just to stop it looping forever if something weird happens
   {
-    fileName = "EdMedPhysics" + std::to_string(fileIndex);
+    // Note that ".root" gets automatically appended by the analysisManager
+    // UNLESS you have some "." characters in the name already
+    fileName = "output." + m_fileNameSuffix + "." + std::to_string(fileIndex) + ".root";
 
     // If the current file name + index can be opened, it exists
-    if ( FILE *file = fopen( (fileName + ".root").c_str(), "r") )
+    // https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exists-using-standard-c-c11-14-17-c
+    if ( FILE *file = fopen( fileName.c_str(), "r") )
     {
       // Close it and try the next
       fclose( file );

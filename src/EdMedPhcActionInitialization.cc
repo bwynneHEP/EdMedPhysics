@@ -35,8 +35,9 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EdMedPhcActionInitialization::EdMedPhcActionInitialization()
+EdMedPhcActionInitialization::EdMedPhcActionInitialization(G4String FileNameSuffix)
  : G4VUserActionInitialization()
+ , m_fileNameSuffix(FileNameSuffix)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -48,7 +49,7 @@ EdMedPhcActionInitialization::~EdMedPhcActionInitialization()
 
 void EdMedPhcActionInitialization::BuildForMaster() const
 {
-  SetUserAction(new EdMedPhRunAction);
+  SetUserAction(new EdMedPhRunAction(m_fileNameSuffix));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -56,7 +57,7 @@ void EdMedPhcActionInitialization::BuildForMaster() const
 void EdMedPhcActionInitialization::Build() const
 {
   SetUserAction(new EdMedPhPrimaryGeneratorAction);
-  SetUserAction(new EdMedPhRunAction);
+  SetUserAction(new EdMedPhRunAction(m_fileNameSuffix));
   SetUserAction(new EdMedPhcEventAction);
 }  
 

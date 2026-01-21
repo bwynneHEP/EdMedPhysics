@@ -32,6 +32,7 @@
 #define EdMedPhcActionInitialization_h 1
 
 #include "G4VUserActionInitialization.hh"
+#include "G4String.hh"
 
 /// Action initialization class.
 ///
@@ -39,11 +40,14 @@
 class EdMedPhcActionInitialization : public G4VUserActionInitialization
 {
   public:
-    EdMedPhcActionInitialization();
+    EdMedPhcActionInitialization(G4String FileNameSuffix = "");
     virtual ~EdMedPhcActionInitialization();
 
     virtual void BuildForMaster() const;
     virtual void Build() const;
+
+  private:
+    G4String m_fileNameSuffix;
 };
 
 #endif
