@@ -39,8 +39,8 @@ void edit_histo(double x_max = -1.){
   std::string filename = "YOUR_FILE_HERE.root";
 
   // Declare a TFile object to read in data from.
-  // Use the filename character array from above.
-  TFile * input_file = new TFile( filename.c_str(), "read" );
+  // Use the filename string from above.
+  TFile * input_file = TFile::Open( filename.c_str(), "read" );
 
   // Check that the file was opened successfully
   if ( !input_file || !input_file->IsOpen() )

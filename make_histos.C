@@ -29,12 +29,19 @@ void make_histos(){
   
   // The name of the file to input, 
   // ie the simulation output file.
-  char filename[128] = "EdMedPhysics.root";
+  std::string filename = "YOUR_FILE_HERE.root";
 
   // Declare a TFile object to read in data from.
   // Use the filename string from above.
-  TFile * input_file = TFile::Open(filename);
-  
+  TFile * input_file = TFile::Open( filename.c_str(), "read" );
+
+  // Check that the file was opened successfully
+  if ( !input_file || !input_file->IsOpen() )
+  {
+    std::cout << "Failed to open " << filename << std::endl;
+    return;
+  }
+
   // A TTree is an ntuple with variables 
   // stored with different values per entry.
   TTree * tree = (TTree *) input_file->Get("EdMedPh");
@@ -61,18 +68,22 @@ void make_histos(){
   // Declare a 2D histogram
   // This will be used to plot the hits in the X-Y plane
   TH2F *hXY =  new TH2F("hXY","; X (cm) ; Y (cm)",
-			100,-15.0,15.0, 100,-15.0,15.0);
+			100, -15.0, 15.0,
+			100, -15.0, 15.0);
   
 
   // This will be used to plot the hits in the Z-R plane
   TH2F *hZR =  new TH2F("hZR","; Z (cm) ; R (cm)",
-			100,0.0,15.0, 100,0.0,5.0);
+			100, 0.0, 15.0,
+			100, 0.0, 5.0);
   
   // Declare a 3D histogram
   // Given this is a 3D histogram the number of bins 
   // per axis has been reduced 
   TH3F *hZXY =  new TH3F("hZXY","; Z (cm) ; X (cm); Y (cm)",
-			 32,0.,20.,32,-15.0,15.0, 32,-15.0,15.0);  
+			 32, 0.0,   20.0,
+			 32, -15.0, 15.0,
+			 32, -15.0, 15.0);
 
   // The following for loop is used to iterate though the hits.
   // This is where the histograms are filled and data
@@ -84,13 +95,16 @@ void make_histos(){
     
     // Fill histograms with positions in cm
     // weighted by energy depostied
-    hXY->Fill(X/10.,Y/10.,Edep);
+    hXY->Fill( X/10.0, Y/10.0, Edep );
     
-    hZR->Fill(Z/10,sqrt(X*X+Y*Y)/10,Edep);
+    hZR->Fill( Z/10.0, sqrt(X*X+Y*Y)/10.0, Edep );
     
-    hZXY->Fill(Z/10.,X/10.,Y/10.,Edep);
+    hZXY->Fill( Z/10.0, X/10.0, Y/10.0, Edep );
   }
  
+  // Create an output file name based on the input
+  std::string outputFileName = filename.substr( 0, filename.find(".root") );
+
   // Create a canvas to draw on
   // and for saving pdfs
   TCanvas * canvas = new TCanvas();
@@ -106,10 +120,10 @@ void make_histos(){
   // Draw as heat map ie with
   // counts in colors
   hXY->Draw("colz");
-  canvas->SaveAs("hXY.pdf");
+  canvas->SaveAs( (outputFileName + ".hXY.pdf").c_str() );
 
   hZR->Draw("colz");
-  canvas->SaveAs("hZR.pdf");
+  canvas->SaveAs( (outputFileName + ".hZR.pdf").c_str() );
 
   canvas->SetLogz(0);
 
@@ -120,10 +134,10 @@ void make_histos(){
   // alternative draw option - comment in if desired
   //hZXY->Draw("BOX");
 
-  canvas->SaveAs("hZXY.pdf");
+  canvas->SaveAs( (outputFileName + ".hZXY.pdf").c_str() );
   
   // Create a new file to save the histograms in.
-  TFile * output_file = new TFile("my_new_histos.root","RECREATE");
+  TFile * output_file = new TFile( (outputFileName + ".new_histos.root").c_str(), "RECREATE" );
   output_file->cd();
   
   hXY->Write();
@@ -136,5 +150,4 @@ void make_histos(){
  
   // quit root and return to the terminal command prompt
   gApplication->Terminate();
-
 }
