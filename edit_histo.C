@@ -36,11 +36,18 @@ void edit_histo(double x_max = -1.){
 
   // The name of the file to input.
   // Ie the simulation output file name.
-  char filename[128] = "EdMedPhysics.root";
+  std::string filename = "YOUR_FILE_HERE.root";
 
   // Declare a TFile object to read in data from.
   // Use the filename character array from above.
-  TFile * input_file = new TFile(filename,"");
+  TFile * input_file = new TFile( filename.c_str(), "read" );
+
+  // Check that the file was opened successfully
+  if ( !input_file || !input_file->IsOpen() )
+  {
+    std::cout << "Failed to open " << filename << std::endl;
+    return;
+  }
   
   // Connect to a histogram in the file.
   // https://root.cern.ch/doc/master/classTH1D-members.html
@@ -109,11 +116,15 @@ void edit_histo(double x_max = -1.){
   // This will only apply to the pdf image.
   Edep_vs_Z->Draw("hist");
 
+  // Make an output file name based on the input
+  // Don't duplicate the ".root" if it is there
+  std::string outputFileName = filename.substr( 0, filename.find(".root") );
+
   // Save the canvas as a pdf...
-  canvas.SaveAs("my_edited_histo.pdf");
+  canvas.SaveAs( (outputFileName + ".edited_histo.pdf").c_str() );
 
   // ... and also as a root file.
-  Edep_vs_Z->SaveAs("my_edited_histo.root");
+  Edep_vs_Z->SaveAs( (outputFileName + ".edited_histo.root").c_str() );
    
   // NB Several other file types can be specified
   // including image files (.png,.eps,.jpg); or even a .C macro.
